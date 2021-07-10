@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.keyMapper">
+
+    <insert id="insertPolicyInfo" parameterType="go.go.info.model.KeyVO">
+   		INSERT INTO TBL_POLICY
+   		(username, description, minLen)
+		values(#{userName}, #{desc}, #{minLen})
+	</insert>
+	
+	<insert id="insertGenPolicyInfo" parameterType="go.go.info.model.KeyVO">
+   		INSERT INTO TBL_POLICY
+   		(keyNo, username, description, minLen)
+		values(#{keyNo}, #{userName}, #{desc}, #{minLen})
+	</insert>
+	
+	<insert id="insertClaimInfo" parameterType="go.go.info.model.KeyVO">
+   		INSERT INTO TBL_CLAIM
+   		(keyNo, username, description)
+		values(#{keyNo}, #{userName}, #{desc})
+	</insert>
+	
+	<select id="findGenlastKeyNo" resultType="String">
+	 	SELECT MAX(keyNo) AS keyNo
+	 	  FROM TBL_POLICY
+	 </select>
+	
+	 <select id="findlastKeyNo" resultType="String">
+	 	SELECT MAX(keyNo) AS keyNo
+	 	  FROM TBL_CLAIM
+	 </select>
+	 
+	 <select id="findPolicyKeyNo" parameterType="String" resultType="go.go.info.model.KeyVO">
+	 	SELECT keyNo, minLen
+	 	  FROM TBL_POLICY
+	 	 WHERE keyNo = (
+						 	SELECT MAX(keyNo) AS keyNo
+						 	  FROM TBL_POLICY
+						 	 WHERE username = #{userName}
+					   )
+	 </select>
+	 
+	 <select id="findClaimKeyNo" parameterType="String" resultType="String">
+	 	SELECT MAX(keyNo) AS keyNo
+	 	  FROM TBL_CLAIM
+	 	 WHERE username = #{userName}
+	 </select>
+	
+</mapper>
